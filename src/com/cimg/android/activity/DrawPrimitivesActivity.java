@@ -32,7 +32,8 @@ public class DrawPrimitivesActivity extends Activity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Log.i("XXX","image:" + imagePath);
+            Log.i("XXX","start doInBackground :" + imagePath);
+            Log.i("XXX","native message : " + NativeUtils.getMessage());
             NativeUtils.generatePrimitives(imagePath);
             return null;
         }

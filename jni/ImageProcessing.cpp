@@ -10,14 +10,15 @@
 
 using namespace cimg_library;
 
-#define LOG_TAG "YYY"
-#define LOGI(x...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG,x)
+#define LOG_TAG "Native code"
+#define LOGI(x...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, x)
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 void generatePrimitives(const std::string& resultName){
+    LOGI("start generate primitives");
 	CImg<unsigned char> image(1000, 1000, 1, 3, 0);
 	image.fill(0);
 	unsigned char colorLine[] = {255, 255, 255};
@@ -28,6 +29,7 @@ void generatePrimitives(const std::string& resultName){
 		300,
 		colorLine
 	);
+	LOGI("draw line");
 	unsigned char colorTriangle[] = {255, 255, 0};
 	image.draw_triangle(
 		700,
@@ -38,7 +40,7 @@ void generatePrimitives(const std::string& resultName){
 		(150 + 250),
 		colorTriangle
 	);
-
+    LOGI("draw triangle");
 	unsigned char colorCircle[] = {255, 0, 255};
 	image.draw_circle(
 		250,
@@ -64,7 +66,10 @@ void generatePrimitives(const std::string& resultName){
     pointsPolygon(3,1) = (700 + 50); // Y3
 
 	image.draw_polygon(pointsPolygon, colorPolygon);
+	LOGI("draw polygon");
 	image.get_channels(0,2).save(resultName.c_str());
+
+	LOGI("end generate primitives");
 	image.clear();
 }
 
@@ -77,7 +82,6 @@ void changeColorBalance(
 ){
 	CImg<unsigned char> image;
 	image.load(sourceName.c_str());
-	LOGI("Point-1");
 	float rgb[] = {r, g, b};
 
 	cimg_forXY(image,x,y){
@@ -113,7 +117,17 @@ std::string jStrToStr(
     JNIEnv *env,
     jstring& jstr
 ){
+    LOGI("convert jstring to string");
     return std::string(env->GetStringUTFChars(jstr, 0));
+}
+
+JNIEXPORT jstring JNICALL Java_com_cimg_android_utils_NativeUtils_getMessage(
+    JNIEnv *env,
+    jobject thisObj
+) {
+    LOGI("start get message");
+    char message[] = "Test Message";
+    return env->NewStringUTF(message);
 }
 
 JNIEXPORT void JNICALL Java_com_cimg_android_utils_NativeUtils_generatePrimitives(
@@ -121,6 +135,7 @@ JNIEXPORT void JNICALL Java_com_cimg_android_utils_NativeUtils_generatePrimitive
     jobject thisObj,
     jstring jresultPath
 ) {
+    LOGI("start wrap generate primitives");
     std::string resultPath = jStrToStr(env, jresultPath);
     generatePrimitives(resultPath);
 }
@@ -143,7 +158,6 @@ JNIEXPORT void JNICALL Java_com_cimg_android_utils_NativeUtils_changeColorBalanc
         (float) jg,
         (float) jb
     );
-    LOGI("Finish");
 }
 
 JNIEXPORT void JNICALL Java_com_cimg_android_utils_NativeUtils_processingBlocks(

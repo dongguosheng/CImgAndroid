@@ -1,0 +1,17 @@
+*.apk
+*.ap_
+
+*.dex
+
+*.class
+
+bin/
+gen/
+
+*.iml
+
+obj/*.so
+obj/*.o
+obj/*.od
+local.properties
+
